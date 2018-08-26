@@ -155,7 +155,7 @@ public class FarmerController : MonoBehaviour
         }
     }
 
-    void fillAnimal(Transform parent, int population, MovementNet animalPrefab, NeuralNet.Net fittestNet, bool mutate)
+    void fillAnimal(Transform parent, int population, MovementNet animalPrefab, NeuralNet.Net fittestNet)
     {
         if (parent.childCount < population)
         {
@@ -167,32 +167,28 @@ public class FarmerController : MonoBehaviour
                     (UnityEngine.Random.value - 0.5f) * fieldBounds.z * 0.9f);
 
                 // TODO MOVE ALL THIS TO A BREEDER.....
-                if (mutate) {
-                    List<NeuralNet.Net> nets = new List<NeuralNet.Net>();
-                    if (fittestNet != null)
-                    {
-                        nets.Add(fittestNet);
-                    }
+                List<NeuralNet.Net> nets = new List<NeuralNet.Net>();
+                if (fittestNet != null)
+                {
+                    nets.Add(fittestNet);
+                }
 
-                    if (parent.childCount > 0)
-                    {
-                        Transform source = parent.GetChild(UnityEngine.Random.Range(0, parent.childCount));
-                        nets.Add(source.GetComponent<MovementNet>().Net);
-                    }
+                if (parent.childCount > 0)
+                {
+                    Transform source = parent.GetChild(UnityEngine.Random.Range(0, parent.childCount));
+                    nets.Add(source.GetComponent<MovementNet>().Net);
+                }
 
-                    if (nets.Count > 0)
-                    {
-                        List<NeuralNet.Net> mutants = NextMutator(nets);
-                        foreach (NeuralNet.Net net in mutants) {
-                            MovementNet animal = Instantiate<MovementNet>(animalPrefab, position, Quaternion.identity, parent);
-                            animal.TransplantNet(net);
-                        }
-                    }
-                    else if (fittestNet != null)
-                    {
+                if (nets.Count > 0)
+                {
+                    List<NeuralNet.Net> mutants = NextMutator(nets);
+                    foreach (NeuralNet.Net net in mutants) {
                         MovementNet animal = Instantiate<MovementNet>(animalPrefab, position, Quaternion.identity, parent);
-                        animal.TransplantNet(fittestNet);
+                        animal.TransplantNet(net);
                     }
+                } else {
+                    // Random
+                    Instantiate<MovementNet>(animalPrefab, position, Quaternion.identity, parent);
                 }
             }
         }
@@ -222,8 +218,7 @@ public class FarmerController : MonoBehaviour
         Destroy(carnivore.gameObject);
         fillAnimal(
             CarnivoreParent, CarnivorePopulation, CarnivorePrefab, 
-            fittestCache.ContainsKey(name) ? fittestCache[name].net : null,
-            false
+            fittestCache.ContainsKey(name) ? fittestCache[name].net : null
         );
 
         // Herbivores
@@ -233,8 +228,7 @@ public class FarmerController : MonoBehaviour
         Destroy(herbivore.gameObject);
         fillAnimal(
             HerbivoreParent, HerbivorePopulation, HerbivorePrefab,
-            fittestCache.ContainsKey(name) ? fittestCache[name].net : null,
-            false
+            fittestCache.ContainsKey(name) ? fittestCache[name].net : null
         );
     }
 
@@ -246,13 +240,13 @@ public class FarmerController : MonoBehaviour
         if (HerbivoreParent.childCount < HerbivorePopulation)
         {
             NeuralNet.Net fittestNet = fittestCache.ContainsKey("herbivore") ? fittestCache["herbivore"].net : null;
-            fillAnimal(HerbivoreParent, HerbivorePopulation, HerbivorePrefab, fittestNet, true);
+            fillAnimal(HerbivoreParent, HerbivorePopulation, HerbivorePrefab, fittestNet);
         }
 
         if (CarnivoreParent.childCount < CarnivorePopulation)
         {
             NeuralNet.Net fittestNet = fittestCache.ContainsKey("carnivore") ? fittestCache["carnivore"].net : null;
-            fillAnimal(CarnivoreParent, CarnivorePopulation, CarnivorePrefab, fittestNet, true);
+            fillAnimal(CarnivoreParent, CarnivorePopulation, CarnivorePrefab, fittestNet);
         }
     }
 

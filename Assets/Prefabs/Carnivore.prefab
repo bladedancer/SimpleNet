@@ -160,6 +160,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba4889e7d485f724ca06c85049c82803, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  statCanvasPrefab: {fileID: 114806064370496598, guid: ae2ddb4e1fb486647a2e21e7c4c72c2c,
+    type: 2}
 --- !u!114 &114482828393892312
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -184,6 +186,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   threats:
+  - tag: carnivore
+    level: 1
   - tag: wall
     level: 1
   OnChangeWeights:
@@ -197,6 +201,13 @@ MonoBehaviour:
     - Animal
     maxDistance: 12
     angle: 0
+    extents: {x: 0.25, y: 0.5, z: 0.25}
+    origin: {x: 0.5, y: 0, z: 0.5}
+  - layers:
+    - Default
+    - Animal
+    maxDistance: 12
+    angle: 0
     extents: {x: 0.5, y: 0.5, z: 0.5}
     origin: {x: 0.5, y: 0, z: 0.5}
   - layers:
@@ -204,20 +215,20 @@ MonoBehaviour:
     - Animal
     maxDistance: 12
     angle: 0
-    extents: {x: 1, y: 0.5, z: 0.5}
+    extents: {x: 0.5, y: 0.5, z: 0.5}
     origin: {x: -0.5, y: 0, z: 0.5}
   - layers:
-    - Default
+    - Default2
     - Animal
     maxDistance: 6
-    angle: -60
+    angle: -30
     extents: {x: 1, y: 0.5, z: 0.5}
     origin: {x: -0.5, y: 0, z: 0}
   - layers:
     - Default
     - Animal
     maxDistance: 6
-    angle: 60
-    extents: {x: 1, y: 0.5, z: 0.5}
-    origin: {x: 0.5, y: 0, z: 0}
+    angle: 30
+    extents: {x: 0.5, y: 0.5, z: 0.5}
+    origin: {x: 0, y: 0, z: 0.5}
   data: []

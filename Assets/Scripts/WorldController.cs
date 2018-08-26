@@ -27,16 +27,16 @@ public class WorldController : MonoBehaviour
     {
         Instance = this;
         Ground.position = transform.position;
-    }
-
-    void Start()
-    {
         if (SimulationSettings.Instance)
         {
             WorldScale = SimulationSettings.Instance.WorldSize;
         }
         Ground.localScale = new Vector3(WorldScale * WorldAspect.x, 1, WorldScale * WorldAspect.y);
         GroundRenderer = Ground.GetComponent<Renderer>();
+    }
+
+    void Start()
+    {
         initialCameraZoom();
     }
 

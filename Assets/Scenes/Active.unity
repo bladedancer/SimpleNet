@@ -312,7 +312,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80957c4d9acbb8d40aaec40949c717e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WorldScale: 2
+  WorldScale: 1
   Ground: {fileID: 82471425}
   mainCamera: {fileID: 534669904}
   ScrollMargin: 0.1
@@ -336,8 +336,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CropPopulation: 200
-  HerbivorePopulation: 50
-  CarnivorePopulation: 0
+  HerbivorePopulation: 0
+  CarnivorePopulation: 1
   GrassParent: {fileID: 750370878}
   HerbivoreParent: {fileID: 1814862201}
   CarnivoreParent: {fileID: 1199747071}

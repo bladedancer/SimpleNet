@@ -2633,7 +2633,7 @@ MonoBehaviour:
   CropPopulation: 200
   HerbivorePopulation: 50
   CarnivorePopulation: 20
-  WorldSize: 0
+  WorldSize: 1
 --- !u!1 &1609010404
 GameObject:
   m_ObjectHideFlags: 0

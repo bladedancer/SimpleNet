@@ -226,6 +226,6 @@ MonoBehaviour:
     - Default
     maxDistance: 6
     angle: 90
-    extents: {x: 1, y: 0.5, z: 0.5}
-    origin: {x: 0.5, y: 0, z: 0}
+    extents: {x: 0.5, y: 0.5, z: 0.5}
+    origin: {x: 0, y: 0, z: 0.5}
   data: []
