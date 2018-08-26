@@ -336,8 +336,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CropPopulation: 200
-  HerbivorePopulation: 0
-  CarnivorePopulation: 1
+  HerbivorePopulation: 40
+  CarnivorePopulation: 10
   GrassParent: {fileID: 750370878}
   HerbivoreParent: {fileID: 1814862201}
   CarnivoreParent: {fileID: 1199747071}

@@ -56,7 +56,7 @@ public class SensorNet : MonoBehaviour {
         }
 
         stats = GetComponent<Stats>();
-        sensorDataLength = (distanceSensors.Length * 3) + 1; // (Distance, tag, nutrition) + health
+        sensorDataLength = (distanceSensors.Length * 3); // (Distance, tag, nutrition)
         data = new double[sensorDataLength];
 
         threats.ForEach(threat =>
@@ -108,8 +108,6 @@ public class SensorNet : MonoBehaviour {
                 data[(i * 2) + 2] = 0;
             }
         }
-        // Own health
-        data[distanceSensors.Length * 3] = (stats.Health / stats.MaxHealth);
 
         OnChangeWeights.Invoke(data);
     }

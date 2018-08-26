@@ -173,7 +173,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 221c2a9c0b766a2468ef87214c03a9c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hiddenLayers: 200000000c000000
+  hiddenLayers: 24000000180000000c00000006000000
 --- !u!114 &114848302552864552
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -226,6 +226,6 @@ MonoBehaviour:
     - Default
     maxDistance: 6
     angle: 90
-    extents: {x: 0.5, y: 0.5, z: 0.5}
-    origin: {x: 0, y: 0, z: 0.5}
+    extents: {x: 1, y: 0.5, z: 0.5}
+    origin: {x: 0.5, y: 0, z: 0}
   data: []

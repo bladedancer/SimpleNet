@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class MovementController : MonoBehaviour {
     [SerializeField]
-    private float motion;
+    public float motion;
 
     [SerializeField]
-    private float rotation;
+    public float rotation;
 
     private Rigidbody rb;
     private Stats stats;
