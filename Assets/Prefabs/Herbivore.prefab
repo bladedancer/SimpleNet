@@ -1,0 +1,245 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1195298505465386}
+  m_IsPrefabAsset: 1
+--- !u!1 &1195298505465386
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4896977288534758}
+  - component: {fileID: 33281531892929354}
+  - component: {fileID: 23903499906545530}
+  - component: {fileID: 65950230472043210}
+  - component: {fileID: 54416689177772312}
+  - component: {fileID: 114012035090727950}
+  - component: {fileID: 114652031241074640}
+  - component: {fileID: 114898634192218682}
+  - component: {fileID: 114173582827099184}
+  - component: {fileID: 114975093410132276}
+  m_Layer: 10
+  m_Name: Herbivore
+  m_TagString: herbivore
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4896977288534758
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1195298505465386}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &23903499906545530
+MeshRenderer:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1195298505465386}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
+  m_Materials:
+  - {fileID: 2100000, guid: e318aee169995e54f937321c8fc054c1, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!33 &33281531892929354
+MeshFilter:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1195298505465386}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!54 &54416689177772312
+Rigidbody:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1195298505465386}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 84
+  m_CollisionDetection: 0
+--- !u!65 &65950230472043210
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1195298505465386}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114012035090727950
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1195298505465386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 958654a3da656f54ea4ef0fcb3725fef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  threats:
+  - tag: carnivore
+    level: 1
+  - tag: wall
+    level: 1
+  OnChangeWeights:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: ChangeWeightsEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  distanceSensors:
+  - layers:
+    - Plant
+    - Animal
+    - Default
+    maxDistance: 12
+    angle: 0
+    height: 0.1
+    extents: {x: 0.5, y: 0.5, z: 0.5}
+  - layers:
+    - Plant
+    - Animal
+    - Default
+    maxDistance: 5
+    angle: 45
+    height: 0.1
+    extents: {x: 0.3, y: 0.5, z: 0.3}
+  - layers:
+    - Plant
+    - Animal
+    - Default
+    maxDistance: 5
+    angle: -45
+    height: 0.1
+    extents: {x: 0.5, y: 0.5, z: 0.5}
+  - layers:
+    - Plant
+    - Animal
+    - Default
+    maxDistance: 2
+    angle: 90
+    height: 0.1
+    extents: {x: 0.5, y: 0.5, z: 0.5}
+  - layers:
+    - Plant
+    - Animal
+    - Default
+    maxDistance: 2
+    angle: -90
+    height: 0.1
+    extents: {x: 0.5, y: 0.5, z: 0.5}
+  - layers:
+    - Plant
+    - Animal
+    - Default
+    maxDistance: 1
+    angle: 180
+    height: 0.1
+    extents: {x: 0.5, y: 0.5, z: 0.5}
+  data: []
+--- !u!114 &114173582827099184
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1195298505465386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 221c2a9c0b766a2468ef87214c03a9c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hiddenLayers: 120000001200000008000000
+--- !u!114 &114652031241074640
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1195298505465386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba4889e7d485f724ca06c85049c82803, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114898634192218682
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1195298505465386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70011b372fd08594ca82949257ddfc69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  motion: 0
+  rotation: 0
+--- !u!114 &114975093410132276
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1195298505465386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a119fc46732b5f4cbbef1fbf8c3dc71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Menu:
+  - plant
+  MaxHealth: 100
+  MaxMovementSpeed: 80
+  MaxRotationSpeed: 60
+  MaxNutrition: 20
+  HealthDecayRate: 2
+  _health: 0
