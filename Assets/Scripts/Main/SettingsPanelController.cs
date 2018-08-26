@@ -10,6 +10,7 @@ public class SettingsPanelController : MonoBehaviour {
     public TMP_InputField CarnivorePopulationInput;
     public TMP_InputField CropPopulationInput;
     public TMP_InputField HerbivorePopulationInput;
+    public Slider WorldSizeSlider;
 
     private void Start()
     {
@@ -18,6 +19,7 @@ public class SettingsPanelController : MonoBehaviour {
         CarnivorePopulationInput.onValueChanged.AddListener(SimulationSettings.Instance.OnChangeCarnivorePopulation);
         CropPopulationInput.onValueChanged.AddListener(SimulationSettings.Instance.OnChangeCropPopulation);
         HerbivorePopulationInput.onValueChanged.AddListener(SimulationSettings.Instance.OnChangeHerbivorePopulation);
+        WorldSizeSlider.onValueChanged.AddListener(SimulationSettings.Instance.OnChangeWorldSize);
     }
 
     private void OnEnable()
@@ -33,5 +35,6 @@ public class SettingsPanelController : MonoBehaviour {
         CarnivorePopulationInput.text = SimulationSettings.Instance.CarnivorePopulation.ToString();
         CropPopulationInput.text = SimulationSettings.Instance.CropPopulation.ToString();
         HerbivorePopulationInput.text = SimulationSettings.Instance.HerbivorePopulation.ToString();
+        WorldSizeSlider.value = SimulationSettings.Instance.WorldSize;
     }
 }

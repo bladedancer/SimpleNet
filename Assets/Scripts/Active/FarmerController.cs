@@ -41,9 +41,10 @@ public class FarmerController : MonoBehaviour
     private string dataDirectory;
     private Dictionary<string, NetCacheEntry> fittestCache = new Dictionary<string, NetCacheEntry>();
 
-    private delegate NeuralNet.Net mutator(List<NeuralNet.Net> nets);
+    private delegate List<NeuralNet.Net> mutator(List<NeuralNet.Net> nets);
     private List<mutator> Mutators = new List<mutator>()
     {
+        (nets) => NeuralNet.Mutators.Clone(nets.ToArray()),
         (nets) => NeuralNet.Mutators.LayerCake(nets.Shuffle().ToArray()),
         (nets) => NeuralNet.Mutators.RandomMix(nets.ToArray()),
         (nets) => NeuralNet.Mutators.SelfMutate(nets.ToArray(), new NeuralNet.Options()
@@ -55,7 +56,7 @@ public class FarmerController : MonoBehaviour
         })
     };
     private int mutatorIndex = 0;
-    private NeuralNet.Net NextMutator(List<NeuralNet.Net> nets)
+    private List<NeuralNet.Net> NextMutator(List<NeuralNet.Net> nets)
     {
         mutatorIndex = (mutatorIndex + 1) % Mutators.Count;
         return Mutators[mutatorIndex](nets);
@@ -164,8 +165,6 @@ public class FarmerController : MonoBehaviour
                     (UnityEngine.Random.value - 0.5f) * fieldBounds.x * 0.9f,
                     GrassPrefab.transform.position.y,
                     (UnityEngine.Random.value - 0.5f) * fieldBounds.z * 0.9f);
-                MovementNet animal = Instantiate<MovementNet>(animalPrefab, position, Quaternion.identity, parent);
-
 
                 // TODO MOVE ALL THIS TO A BREEDER.....
                 if (mutate) {
@@ -183,11 +182,15 @@ public class FarmerController : MonoBehaviour
 
                     if (nets.Count > 0)
                     {
-                        NeuralNet.Net mutant = NextMutator(nets);
-                        animal.TransplantNet(mutant);
+                        List<NeuralNet.Net> mutants = NextMutator(nets);
+                        foreach (NeuralNet.Net net in mutants) {
+                            MovementNet animal = Instantiate<MovementNet>(animalPrefab, position, Quaternion.identity, parent);
+                            animal.TransplantNet(net);
+                        }
                     }
                     else if (fittestNet != null)
                     {
+                        MovementNet animal = Instantiate<MovementNet>(animalPrefab, position, Quaternion.identity, parent);
                         animal.TransplantNet(fittestNet);
                     }
                 }

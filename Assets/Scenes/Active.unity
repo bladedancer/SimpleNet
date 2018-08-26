@@ -312,12 +312,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80957c4d9acbb8d40aaec40949c717e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WorldScale: {x: 14, y: 8}
+  WorldScale: 2
   Ground: {fileID: 82471425}
-  camera: {fileID: 534669904}
+  mainCamera: {fileID: 534669904}
+  ScrollMargin: 0.1
+  ScrollSpeed: 30
   ManualAnimalPrefab: {fileID: 114072788146379362, guid: 6c68980b90517f8439f3a95fc74369a3,
     type: 2}
   Diagnostics: {fileID: 1738012560}
+  Top: {fileID: 1023222537}
+  Bottom: {fileID: 818861039}
+  Right: {fileID: 654459465}
+  Left: {fileID: 531218605}
 --- !u!114 &208365188
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -337,7 +343,7 @@ MonoBehaviour:
   CarnivoreParent: {fileID: 1199747071}
   GrassPrefab: {fileID: 1070723688392430, guid: d04c7a9741ce0d945a1c1e64b671348f,
     type: 2}
-  HerbivorePrefab: {fileID: 114223555312003954, guid: bf02b986b95853c47bcc04359dccdffb,
+  HerbivorePrefab: {fileID: 114445117177032260, guid: c82e496db36d7564ea8ac694924b0336,
     type: 2}
   CarnivorePrefab: {fileID: 114482828393892312, guid: 0b7082a57b410ea43ac72b1bce89d9ac,
     type: 2}

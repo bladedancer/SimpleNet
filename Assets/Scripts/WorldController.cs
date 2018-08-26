@@ -5,23 +5,67 @@ using UnityEngine;
 public class WorldController : MonoBehaviour
 {
     public static WorldController Instance { get; private set; }
-    public Vector2 WorldScale;
+    public int WorldScale = 1;
+    private Vector2 WorldAspect = new Vector2(8f, 4.5f);
     public Transform Ground;
     private Renderer GroundRenderer;
 
-    public Camera camera;
+    public Camera mainCamera;
+    public float ScrollMargin = 0.1f;
     public float ScrollSpeed = 5;
     public MovementManual ManualAnimalPrefab;
     private MovementManual ManualAnimal;
     public DiagnosticController Diagnostics;
+
+    public Renderer Top;
+    public Renderer Bottom;
+    public Renderer Right;
+    public Renderer Left;
 
     // Use this for initialization
     void Awake()
     {
         Instance = this;
         Ground.position = transform.position;
-        Ground.localScale = new Vector3(WorldScale.x, 1, WorldScale.y);
+    }
+
+    void Start()
+    {
+        if (SimulationSettings.Instance)
+        {
+            WorldScale = SimulationSettings.Instance.WorldSize;
+        }
+        Ground.localScale = new Vector3(WorldScale * WorldAspect.x, 1, WorldScale * WorldAspect.y);
         GroundRenderer = Ground.GetComponent<Renderer>();
+        initialCameraZoom();
+    }
+
+    private void initialCameraZoom()
+    {
+        mainCamera.transform.position = new Vector3(transform.position.x, mainCamera.transform.position.y, transform.position.z);
+
+        // Set the initial zoom
+        switch (WorldScale)
+        {
+            case 1:
+                mainCamera.orthographicSize = 23;
+                break;
+            case 2:
+                mainCamera.orthographicSize = 47;
+                break;
+            case 3:
+                mainCamera.orthographicSize = 68;
+                break;
+            case 4:
+                mainCamera.orthographicSize = 91;
+                break;
+            case 5:
+                mainCamera.orthographicSize = 113;
+                break;
+            default:
+                mainCamera.orthographicSize = 47;
+                break;
+        }
     }
 
     private void Update()
@@ -41,7 +85,7 @@ public class WorldController : MonoBehaviour
         }
         else if (Input.GetButtonDown("Fire1"))
         {
-            Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 1000, LayerMask.GetMask("Animal")))
             {
@@ -59,37 +103,42 @@ public class WorldController : MonoBehaviour
     {
         // Zoom
         float scroll = Input.GetAxis("Mouse ScrollWheel");
-        bool isGroundFullyVisible = IsFullyVisible(GroundRenderer, camera);
+        bool isGroundFullyVisible = IsFullyVisible(GroundRenderer, mainCamera);
+
+        if (isGroundFullyVisible)
+        {
+            initialCameraZoom();
+        }
 
         if (scroll < 0 || (scroll > 0 && !isGroundFullyVisible))
         {
-            float targetSize = Mathf.Max(10, camera.orthographicSize + (10f * scroll));
-            camera.orthographicSize = targetSize;
+            float targetSize = Mathf.Max(10, mainCamera.orthographicSize + (10f * scroll));
+            mainCamera.orthographicSize = targetSize;
         }
 
-        // Move if on edge
+        // Move if on edge and edge of ground not visible
         if (!isGroundFullyVisible)
         {
             Vector3 dir = Vector3.zero;
-            if (Input.mousePosition.y >= (Screen.height * 0.95) && Input.mousePosition.y <= Screen.height)
+            if (Input.mousePosition.y >= (Screen.height * (1-ScrollMargin)) && Input.mousePosition.y <= Screen.height && !Top.isVisible)
             {
                 dir += new Vector3(0, 0, 1);
             }
-            else if (Input.mousePosition.y <= (Screen.height * 0.05) && Input.mousePosition.y >= 0)
+            else if (Input.mousePosition.y <= (Screen.height * ScrollMargin) && Input.mousePosition.y >= 0 && !Bottom.isVisible)
             {
                 dir += new Vector3(0, 0, -1);
             }
 
-            if (Input.mousePosition.x >= (Screen.width * 0.95) && Input.mousePosition.x <= Screen.width)
+            if (Input.mousePosition.x >= (Screen.width * (1 - ScrollMargin)) && Input.mousePosition.x <= Screen.width && !Right.isVisible)
             {
                 dir += new Vector3(1, 0, 0);
             }
-            else if (Input.mousePosition.x <= (Screen.width * 0.05) && Input.mousePosition.x >= 0)
+            else if (Input.mousePosition.x <= (Screen.width * ScrollMargin) && Input.mousePosition.x >= 0 && !Left.isVisible)
             {
                 dir += new Vector3(-1, 0, 0);
             }
 
-            camera.transform.Translate(dir * Time.deltaTime * ScrollSpeed, Space.World);
+            mainCamera.transform.Translate(dir * Time.deltaTime * ScrollSpeed, Space.World);
         }
     }
 

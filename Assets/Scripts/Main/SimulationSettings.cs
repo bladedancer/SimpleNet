@@ -8,6 +8,7 @@ public class SimulationSettings : MonoBehaviour {
     public int CropPopulation;
     public int HerbivorePopulation;
     public int CarnivorePopulation;
+    public int WorldSize;
 
     public void OnChangeCropPopulation(string pop)
     {
@@ -34,6 +35,12 @@ public class SimulationSettings : MonoBehaviour {
             CarnivorePopulation = 0;
         }
         Debug.Log("carn " + CarnivorePopulation);
+    }
+
+    public void OnChangeWorldSize(float size)
+    {
+        WorldSize = (int) size;
+        Debug.Log("world " + WorldSize);
     }
 
     private void Awake()

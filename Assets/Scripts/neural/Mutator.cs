@@ -4,11 +4,25 @@ using System.Collections.Generic;
 namespace NeuralNet
 {
     public class Options : Dictionary<string, object> { };
-    public delegate Net MutatorFunc(Net[] nets, Options options = null);
+    public delegate List<Net> MutatorFunc(Net[] nets, Options options = null);
 
     public class Mutators
     {
         private static Random random = new Random(Guid.NewGuid().GetHashCode());
+
+        /// <summary>
+        /// Direct clones.
+        /// No options
+        /// </summary>
+        public static MutatorFunc Clone = (nets, options) =>
+        {
+            if (nets.Length == 0)
+            {
+                return null;
+            }
+            Net child = nets[0].Clone();
+            return new List<Net>() { child };
+        };
 
         /// <summary>
         /// Interleaves the weights from the nets, round robins.
@@ -32,7 +46,7 @@ namespace NeuralNet
                     }
                 }
             }
-            return child;
+            return new List<Net>() { child };
         };
 
         /// <summary>
@@ -66,7 +80,7 @@ namespace NeuralNet
                     offset += weightCount;
                 }
             }
-            return child;
+            return new List<Net>() { child };
         };
 
         /// <summary>
@@ -125,7 +139,7 @@ namespace NeuralNet
                     }
                 }
             }
-            return mutant;
+            return new List<Net>() { mutant };
         };
 
         /// <summary>
@@ -153,7 +167,7 @@ namespace NeuralNet
                     mutant.weights[i] = nets[(int) Math.Floor(random.NextDouble() * nets.Length)].weights[i];
                 }
             }
-            return mutant;
+            return new List<Net>() { mutant };
         };
     }
 }
