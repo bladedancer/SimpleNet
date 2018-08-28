@@ -39,14 +39,6 @@ public class SensorNet : MonoBehaviour {
     public int sensorDataLength { get; private set; }
     public DistanceSensor[] distanceSensors = new DistanceSensor[0];
     public double[] data;
-    public double[] sensorData
-    {
-        get
-        {
-            return data;
-        }
-    }
-
     private Stats stats;
 
     void Awake () {

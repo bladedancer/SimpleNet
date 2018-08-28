@@ -10,9 +10,13 @@ public class AnimalController : MonoBehaviour {
     private void Awake()
     {
         stats = GetComponent<Stats>();
-        if (statCanvasPrefab)
+        statsCanvas = GetComponentInChildren<StatCanvasController>();
+        if (statCanvasPrefab && statsCanvas == null)
         {
             statsCanvas = Instantiate(statCanvasPrefab.gameObject, this.transform).GetComponent<StatCanvasController>();
+        }
+
+        if (statsCanvas) { 
             stats.OnChangeConsumed += (d) => statsCanvas.ChangeText(d.ToString());
             stats.OnChangeHealth += ((c, m) => statsCanvas.ChangeValue(c/m));
         }

@@ -11,6 +11,7 @@ public class StatCanvasController : MonoBehaviour {
 
     public void ChangeText(string text)
     {
+        Debug.Log(text);
         statText.text = text;
     }
 

@@ -185,10 +185,12 @@ public class FarmerController : MonoBehaviour
                     foreach (NeuralNet.Net net in mutants) {
                         MovementNet animal = Instantiate<MovementNet>(animalPrefab, position, Quaternion.identity, parent);
                         animal.TransplantNet(net);
+                        animal.gameObject.SetActive(true);
                     }
                 } else {
                     // Random
-                    Instantiate<MovementNet>(animalPrefab, position, Quaternion.identity, parent);
+                    MovementNet animal = Instantiate<MovementNet>(animalPrefab, position, Quaternion.identity, parent);
+                    animal.gameObject.SetActive(true);
                 }
             }
         }
@@ -211,21 +213,32 @@ public class FarmerController : MonoBehaviour
         // Crops
         fillCrop(GrassParent, CropPopulation, GrassPrefab);
 
-        // Carnivores
-        MovementNet carnivore = Instantiate<MovementNet>(CarnivorePrefab);
-        string type = String.Join(".", carnivore.Net.layerSizes.Select(p => p.ToString()).ToArray());
-        string name = carnivore.tag + "-" + type;
-        Destroy(carnivore.gameObject);
+        // Carnivores - Create template
+        CarnivorePrefab = Instantiate<MovementNet>(CarnivorePrefab);
+        if (SimulationSettings.Instance)
+        {
+            CarnivorePrefab.hiddenLayers = SimulationSettings.Instance.CarnivoreLayers;
+        }
+        string type = String.Join(".", CarnivorePrefab.Net.layerSizes.Select(p => p.ToString()).ToArray());
+        string name = CarnivorePrefab.tag + "-" + type;
+        CarnivorePrefab.gameObject.SetActive(false);
+
+        // Herbivores - Create template
+        HerbivorePrefab = Instantiate<MovementNet>(HerbivorePrefab);
+        if (SimulationSettings.Instance)
+        {
+            HerbivorePrefab.hiddenLayers = SimulationSettings.Instance.HerbivoreLayers;
+        }
+        type = String.Join(".", HerbivorePrefab.Net.layerSizes.Select(p => p.ToString()).ToArray());
+        name = HerbivorePrefab.tag + "-" + type;
+        HerbivorePrefab.gameObject.SetActive(false);
+
+        // Fill them
         fillAnimal(
-            CarnivoreParent, CarnivorePopulation, CarnivorePrefab, 
-            fittestCache.ContainsKey(name) ? fittestCache[name].net : null
+            CarnivoreParent, CarnivorePopulation, CarnivorePrefab,
+             fittestCache.ContainsKey(name) ? fittestCache[name].net : null
         );
 
-        // Herbivores
-        MovementNet herbivore = Instantiate<MovementNet>(HerbivorePrefab);
-        type = String.Join(".", herbivore.Net.layerSizes.Select(p => p.ToString()).ToArray());
-        name = herbivore.tag + "-" + type;
-        Destroy(herbivore.gameObject);
         fillAnimal(
             HerbivoreParent, HerbivorePopulation, HerbivorePrefab,
             fittestCache.ContainsKey(name) ? fittestCache[name].net : null

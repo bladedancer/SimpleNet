@@ -164,7 +164,8 @@ namespace NeuralNet
             {
                 for (int i = 0; i < mutant.weights.Length; ++i)
                 {
-                    mutant.weights[i] = nets[(int) Math.Floor(random.NextDouble() * nets.Length)].weights[i];
+                    int n = (int)Math.Floor(random.NextDouble() * nets.Length);
+                    mutant.weights[i] = nets[n].weights[i];
                 }
             }
             return new List<Net>() { mutant };

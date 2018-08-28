@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +10,8 @@ public class SimulationSettings : MonoBehaviour {
     public int HerbivorePopulation;
     public int CarnivorePopulation;
     public int WorldSize;
+    public int[] HerbivoreLayers = new int[0];
+    public int[] CarnivoreLayers = new int[0];
 
     public void OnChangeCropPopulation(string pop)
     {
@@ -28,6 +31,19 @@ public class SimulationSettings : MonoBehaviour {
         Debug.Log("herb " + HerbivorePopulation);
     }
 
+    public void OnChangeHerbivoreLayers(string layers)
+    {
+        try
+        {
+            HerbivoreLayers = new List<int>(Array.ConvertAll(layers.Split(','), int.Parse)).ToArray();
+            Debug.Log("herbLayers " + String.Join(",", HerbivoreLayers));
+        }
+        catch (FormatException ex)
+        {
+            HerbivoreLayers = new int[0];
+        }
+    }
+
     public void OnChangeCarnivorePopulation(string pop)
     {
         if (!int.TryParse(pop, out CarnivorePopulation))
@@ -35,6 +51,16 @@ public class SimulationSettings : MonoBehaviour {
             CarnivorePopulation = 0;
         }
         Debug.Log("carn " + CarnivorePopulation);
+    }
+
+    public void OnChangeCarnivoreLayers(string layers)
+    {
+        try {
+            CarnivoreLayers = new List<int>(Array.ConvertAll(layers.Split(','), int.Parse)).ToArray();
+            Debug.Log("carnLayers " + String.Join(",", CarnivoreLayers));
+        } catch (FormatException ex) {
+            CarnivoreLayers = new int[0];
+        }
     }
 
     public void OnChangeWorldSize(float size)
