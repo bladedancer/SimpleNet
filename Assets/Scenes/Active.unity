@@ -338,6 +338,7 @@ MonoBehaviour:
   CropPopulation: 200
   HerbivorePopulation: 40
   CarnivorePopulation: 10
+  SpeciesNetCacheSize: 25
   GrassParent: {fileID: 750370878}
   HerbivoreParent: {fileID: 1814862201}
   CarnivoreParent: {fileID: 1199747071}

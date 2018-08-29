@@ -6,19 +6,35 @@ using UnityEngine;
 
 public class NetCacheEntry
 {
+    public string name;
     public string tag;
     public double fitness;
     public NeuralNet.Net net;
 
     public NetCacheEntry() { }
 
-    public NetCacheEntry(string tag, double fitness, NeuralNet.Net net)
+    public NetCacheEntry(string name, string tag, double fitness, NeuralNet.Net net)
     {
+        this.name = name;
         this.tag = tag;
         this.fitness = fitness;
         this.net = net;
     }
 }
+
+public class FitnessComparer : IComparer<double>
+{
+    public int Compare(double x, double y)
+    {
+        int result = y.CompareTo(x);
+
+        if (result == 0)
+            return 1;
+        else
+            return result;
+    }
+}
+
 
 public class FarmerController : MonoBehaviour
 {
@@ -28,6 +44,8 @@ public class FarmerController : MonoBehaviour
     public int CropPopulation;
     public int HerbivorePopulation;
     public int CarnivorePopulation;
+
+    public int SpeciesNetCacheSize;
 
     public Transform GrassParent;
     public Transform HerbivoreParent;
@@ -39,7 +57,7 @@ public class FarmerController : MonoBehaviour
 
     private Vector3 fieldBounds;
     private string dataDirectory;
-    private Dictionary<string, NetCacheEntry> fittestCache = new Dictionary<string, NetCacheEntry>();
+    private Dictionary<string, SortedList<double, NetCacheEntry>> fittestCache = new Dictionary<string, SortedList<double, NetCacheEntry>>();
 
     private delegate List<NeuralNet.Net> mutator(List<NeuralNet.Net> nets);
     private List<mutator> Mutators = new List<mutator>()
@@ -62,6 +80,46 @@ public class FarmerController : MonoBehaviour
         return Mutators[mutatorIndex](nets);
     }
 
+    private SortedList<double, NetCacheEntry> getFittestList(string name)
+    {
+        if (fittestCache.ContainsKey(name))
+        {
+            return fittestCache[name];
+        }
+        else
+        {
+            SortedList<double, NetCacheEntry> list = new SortedList<double, NetCacheEntry>(new FitnessComparer());
+            fittestCache[name] = list;
+            return list;
+        }
+    }
+
+    private void addFittestList(NetCacheEntry entry)
+    {
+        if (entry.fitness <= 0)
+        {
+            return;
+        }
+
+        SortedList<double, NetCacheEntry> fittestList = getFittestList(entry.name);
+
+        if (fittestList.Count >= SpeciesNetCacheSize && fittestList.Count > 0 && fittestList.Last().Key >= entry.fitness)
+        {
+            // No better than anything in list
+            return;
+        }
+
+        if (fittestList.Count == 0 || (fittestList.Count > 0 && entry.fitness > fittestList.First().Key))
+        {
+            Debug.Log("Fittest " + entry.tag + ": " + entry.fitness);
+        }
+        fittestList.Add(entry.fitness, entry);
+        while (fittestList.Count > SpeciesNetCacheSize)
+        {
+            fittestList.RemoveAt(SpeciesNetCacheSize);
+        }
+    }
+
     /**
      * When someone dies update the cache if they were the fittest.
      */
@@ -75,25 +133,15 @@ public class FarmerController : MonoBehaviour
         {
             string type = String.Join(".", net.Net.layerSizes.Select(p => p.ToString()).ToArray());
             string name = tag + "-" + type;
-
-            if (fittestCache.ContainsKey(name))
-            {
-                if (fittestCache[name].fitness >= net.Net.Fitness)
-                {
-                    // Not fitter
-                    return;
-                }
-            }
-
             NetCacheEntry entry = new NetCacheEntry
             {
+                name = name,
                 tag = tag,
                 net = net.Net,
                 fitness = net.Net.Fitness
             };
-            fittestCache[name] = entry;
+            addFittestList(entry);
             save();
-            Debug.Log("FITEST " + tag + ": " + net.Net.Fitness);
         }
     }
 
@@ -155,7 +203,7 @@ public class FarmerController : MonoBehaviour
         }
     }
 
-    void fillAnimal(Transform parent, int population, MovementNet animalPrefab, NeuralNet.Net fittestNet)
+    void fillAnimal(Transform parent, int population, MovementNet animalPrefab, IEnumerable<NeuralNet.Net> fittestNets)
     {
         if (parent.childCount < population)
         {
@@ -168,16 +216,16 @@ public class FarmerController : MonoBehaviour
 
                 // TODO MOVE ALL THIS TO A BREEDER.....
                 List<NeuralNet.Net> nets = new List<NeuralNet.Net>();
-                if (fittestNet != null)
+                if (fittestNets != null)
                 {
-                    nets.Add(fittestNet);
+                    nets.AddRange(fittestNets);
                 }
 
-                if (parent.childCount > 0)
-                {
-                    Transform source = parent.GetChild(UnityEngine.Random.Range(0, parent.childCount));
-                    nets.Add(source.GetComponent<MovementNet>().Net);
-                }
+                //if (parent.childCount > 0)
+                //{
+                //    Transform source = parent.GetChild(UnityEngine.Random.Range(0, parent.childCount));
+                //    nets.Add(source.GetComponent<MovementNet>().Net);
+                //}
 
                 if (nets.Count > 0)
                 {
@@ -223,6 +271,11 @@ public class FarmerController : MonoBehaviour
         string name = CarnivorePrefab.tag + "-" + type;
         CarnivorePrefab.gameObject.SetActive(false);
 
+        fillAnimal(
+            CarnivoreParent, CarnivorePopulation, CarnivorePrefab,
+            fittestCache.ContainsKey(name) ? fittestCache[name].Values.Select(entry => entry.net) : null
+        );
+
         // Herbivores - Create template
         HerbivorePrefab = Instantiate<MovementNet>(HerbivorePrefab);
         if (SimulationSettings.Instance)
@@ -233,15 +286,9 @@ public class FarmerController : MonoBehaviour
         name = HerbivorePrefab.tag + "-" + type;
         HerbivorePrefab.gameObject.SetActive(false);
 
-        // Fill them
-        fillAnimal(
-            CarnivoreParent, CarnivorePopulation, CarnivorePrefab,
-             fittestCache.ContainsKey(name) ? fittestCache[name].net : null
-        );
-
         fillAnimal(
             HerbivoreParent, HerbivorePopulation, HerbivorePrefab,
-            fittestCache.ContainsKey(name) ? fittestCache[name].net : null
+            fittestCache.ContainsKey(name) ? fittestCache[name].Values.Select(entry => entry.net) : null
         );
     }
 
@@ -252,14 +299,14 @@ public class FarmerController : MonoBehaviour
 
         if (HerbivoreParent.childCount < HerbivorePopulation)
         {
-            NeuralNet.Net fittestNet = fittestCache.ContainsKey("herbivore") ? fittestCache["herbivore"].net : null;
-            fillAnimal(HerbivoreParent, HerbivorePopulation, HerbivorePrefab, fittestNet);
+            IEnumerable<NeuralNet.Net> fittestNets = fittestCache.ContainsKey("herbivore") ? fittestCache["herbivore"].Values.Select(entry => entry.net) : null;
+            fillAnimal(HerbivoreParent, HerbivorePopulation, HerbivorePrefab, fittestNets);
         }
 
         if (CarnivoreParent.childCount < CarnivorePopulation)
         {
-            NeuralNet.Net fittestNet = fittestCache.ContainsKey("carnivore") ? fittestCache["carnivore"].net : null;
-            fillAnimal(CarnivoreParent, CarnivorePopulation, CarnivorePrefab, fittestNet);
+            IEnumerable<NeuralNet.Net> fittestNets = fittestCache.ContainsKey("carnivore") ? fittestCache["carnivore"].Values.Select(entry => entry.net) : null;
+            fillAnimal(CarnivoreParent, CarnivorePopulation, CarnivorePrefab, fittestNets);
         }
     }
 
@@ -269,27 +316,30 @@ public class FarmerController : MonoBehaviour
         IEnumerable<string> dataFiles = Directory.EnumerateFiles(dataDirectory, "*.json");
 
         foreach (string file in dataFiles)
-        {            
+        {
             NetSaveData save = JsonUtility.FromJson<NetSaveData>(File.ReadAllText(file));
-            fittestCache.Add(
-                save.tag + "-" + String.Join(".", save.layerSizes.Select(p => p.ToString()).ToArray()),
-                new NetCacheEntry(save.tag, save.fitness, new NeuralNet.FeedForward(save.layerSizes, save.weights))
-            );
+            string name = save.tag + "-" + String.Join(".", save.layerSizes.Select(p => p.ToString()).ToArray());
+            addFittestList(new NetCacheEntry(name, save.tag, save.fitness, new NeuralNet.FeedForward(save.layerSizes, save.weights)));
         }
     }
 
     private void save()
     {
-        foreach (KeyValuePair<string, NetCacheEntry> entry in fittestCache)
+        foreach (KeyValuePair<string, SortedList<double, NetCacheEntry>> entry in fittestCache)
         {
-            string type = String.Join(".", ((NeuralNet.FeedForward)entry.Value.net).layerSizes.Select(p => p.ToString()).ToArray());
+            if (entry.Value.Count == 0)
+            {
+                continue;
+            }
+            NetCacheEntry fittest = entry.Value.First().Value;
+            string type = String.Join(".", ((NeuralNet.FeedForward)fittest.net).layerSizes.Select(p => p.ToString()).ToArray());
 
             string filename = Path.GetInvalidFileNameChars().Aggregate(
-                entry.Value.tag + '-' + type,
+                fittest.tag + '-' + type,
                 (current, c) => current.Replace(c, '_')) + ".json";
 
             // Save it
-            NetSaveData save = new NetSaveData(entry.Value.tag, (NeuralNet.FeedForward)entry.Value.net);
+            NetSaveData save = new NetSaveData(fittest.tag, (NeuralNet.FeedForward)fittest.net);
             string savePath = Path.Combine(dataDirectory, filename);
             File.WriteAllText(savePath, JsonUtility.ToJson(save, true));
             Debug.Log("Saved as " + savePath);

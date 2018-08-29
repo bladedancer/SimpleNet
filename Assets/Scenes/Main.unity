@@ -3243,11 +3243,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae42f5b10ed66274abf4a0d274cc9dec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CropPopulation: 600
-  HerbivorePopulation: 150
-  CarnivorePopulation: 40
-  WorldSize: 3
-  HerbivoreLayers: 180000000c00000006000000
+  CropPopulation: 100
+  HerbivorePopulation: 50
+  CarnivorePopulation: 0
+  WorldSize: 1
+  HerbivoreLayers: 0c0000000600000003000000
   CarnivoreLayers: 200000001000000008000000
 --- !u!1 &1574872455
 GameObject:
