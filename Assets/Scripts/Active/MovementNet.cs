@@ -10,7 +10,20 @@ public class MovementNet : MonoBehaviour {
     private int NetOutputHistoryDepth = 2;
     private double[] NetOutputHistory;
 
-    public int[] hiddenLayers = new int[] { 8, 5 };
+    public int[] hiddenLayers
+    {
+        get
+        {
+            return _hiddenLayers;
+        }
+        set
+        {
+            _hiddenLayers = value;
+            createNet();
+        }
+    }
+
+    public int[] _hiddenLayers = new int[] { 8, 5 };
     public FeedForward Net
     {
         get;
@@ -39,9 +52,9 @@ public class MovementNet : MonoBehaviour {
 
     private void createNet()
     {
-        int[] layers = new int[hiddenLayers.Length + 2]; // input/output
+        int[] layers = new int[_hiddenLayers.Length + 2]; // input/output
         layers[0] = sensors.data.Length + (NetOutputHistory.Length);
-        hiddenLayers.CopyTo(layers, 1);
+        _hiddenLayers.CopyTo(layers, 1);
         layers[layers.Length - 1] = NetOutputCount;
         Net = new FeedForward(layers);
 
